@@ -1,0 +1,18 @@
+{
+  "name": "igelkott-hue",
+  "description": "Make tommies lights flash red",
+  "version": "0.1.0",
+  "main": "igelkott-hue.js",
+  "author": "",
+  "license": "BSD-2-Clause",
+  "dependencies": {
+    },
+    "devDependencies": {
+      "chai": "~1.4.2",
+      "mocha": "1.3.x",
+      "igelkott": "*"
+      },
+      "scripts": {
+        "test": "mocha -R spec --recursive"
+      }
+    }
