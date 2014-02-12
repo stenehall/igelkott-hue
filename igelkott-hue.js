@@ -19,19 +19,21 @@ var Hue = function Hue() {
 
 Hue.prototype.movingon = function movingon(message) {
 
+  var obj;
+
   if (this.queue.indexOf(message.prefix.nick) === -1)
   {
     this.queue.push(message.prefix.nick);
-    var obj = {
+    obj = {
       command: 'PRIVMSG',
-      parameters: [message.parameters[0], message.prefix.nick+": Yes! Det tycer jag också."]
+      parameters: [message.parameters[0], message.prefix.nick+": Yes! Det tycker jag också."]
     };
 
     this.igelkott.push(obj);
   }
   else
   {
-    var obj = {
+    obj = {
       command: 'PRIVMSG',
       parameters: [message.parameters[0], message.prefix.nick+": Du har redan hojtat högt redan."]
     };
@@ -41,7 +43,7 @@ Hue.prototype.movingon = function movingon(message) {
 
   if (this.queue.length > 9)
   {
-    var obj = {
+    obj = {
       command: 'PRIVMSG',
       parameters: [message.parameters[0], "Vi kör en moving on"]
     };
