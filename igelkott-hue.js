@@ -43,6 +43,9 @@ Hue.prototype.movingon = function movingon(message) {
 
   if (this.queue.length > 9)
   {
+    // To be added later
+    //http.get({ hostname: 'localhost', port: 8080, path: '/?hue=101010' }); // @TODO: Might want to handle a response
+
     obj = {
       command: 'PRIVMSG',
       parameters: [message.parameters[0], "Vi kör en moving on"]
