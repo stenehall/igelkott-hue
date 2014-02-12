@@ -5,14 +5,17 @@
   "main": "igelkott-hue.js",
   "author": "",
   "license": "BSD-2-Clause",
-  "dependencies": {
-    },
-    "devDependencies": {
-      "chai": "~1.4.2",
-      "mocha": "1.3.x",
-      "igelkott": "*"
-      },
-      "scripts": {
-        "test": "mocha -R spec --recursive"
-      }
-    }
+  "dependencies": {},
+  "devDependencies": {
+    "chai": "~1.4.2",
+    "mocha": "1.3.x",
+    "igelkott": "*"
+  },
+  "scripts": {
+    "test": "mocha -R spec --recursive"
+  },
+  "repository" : {
+    "type" : "git",
+    "url" : "http://github.com/stenehall/igelkott-hue.git"
+  }
+}
