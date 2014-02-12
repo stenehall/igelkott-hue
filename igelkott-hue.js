@@ -10,11 +10,11 @@ var Hue = function Hue() {
 
   this.queue = [];
 
+  var interval = this.config.interval || 60000;
+
   setInterval(function(){
     this.queue.pop();
-  }.bind(this), 10000);
-
-
+  }.bind(this), interval);
 };
 
 Hue.prototype.movingon = function movingon(message) {
