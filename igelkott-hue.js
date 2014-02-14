@@ -35,7 +35,7 @@ Hue.prototype.movingon = function movingon(message) {
   {
     obj = {
       command: 'PRIVMSG',
-      parameters: [message.parameters[0], message.prefix.nick+": Du har redan hojtat högt redan."]
+      parameters: [message.parameters[0], message.prefix.nick+": Du har redan hojtat högt."]
     };
 
     this.igelkott.push(obj);
