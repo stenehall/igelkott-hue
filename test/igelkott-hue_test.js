@@ -24,24 +24,61 @@ describe('Talk', function() {
     };
 
     igelkott = new Igelkott(config);
-    igelkott.plugin.load('hue', {}, Hue);
+    igelkott.plugin.load('hue', {interval: 5000}, Hue);
 
   });
 
-  it('Should count up the queue');
-  it('Should not count up queue after first moving on from same user');
-  it('Should remove one person from the queue every 30 seconds');
+  it('Should count up the queue', function(done) {
+
+    igelkott.on('hue:movingon', function(data) {
+      assert.equal(igelkott.plugin.plugins.hue.queue.length, 1);
+      done();
+    });
+
+    igelkott.connect();
+    s.write(":dsmith0!~dsmith@unaffiliated/dsmith PRIVMSG ##botbotbot :!movingon\r\n");
+
+  });
+
+  it('Should not count up queue after first moving on from same user', function(done) {
+    var queueCount = 0;
+
+    igelkott.on('hue:movingon', function(data) {
+      if(queueCount > 0)
+      {
+        assert.equal(igelkott.plugin.plugins.hue.queue.length, 1);
+        done();
+      }
+      queueCount++;
+    });
+
+    igelkott.connect();
+    s.write(":dsmith0!~dsmith@unaffiliated/dsmith PRIVMSG ##botbotbot :!movingon\r\n");
+    s.write(":dsmith0!~dsmith@unaffiliated/dsmith PRIVMSG ##botbotbot :!movingon\r\n");
+
+  });
+
+
+  it('Should remove one person from the queue every 5 seconds', function(done) {
+    this.timeout(25000); // We need to wait for it
+
+
+    igelkott.connect();
+    s.write(":dsmith0!~dsmith@unaffiliated/dsmith PRIVMSG ##botbotbot :!movingon\r\n");
+    s.write(":dsmith1!~dsmith@unaffiliated/dsmith PRIVMSG ##botbotbot :!movingon\r\n");
+
+    setTimeout(function() {
+      assert.equal(igelkott.plugin.plugins.hue.queue.length, 1);
+      done();
+    }, 6000);
+
+  });
 
 
   it('Should respond with moving on after 10 movingons from unique users', function(done) {
 
-    this.timeout(50000); // DB queries are slow
-
-    s.on('data', function(data) {
-      if(data == "PRIVMSG ##botbotbot :Vi kör en moving on\r\n")
-      {
-        done();
-      }
+    igelkott.on('hue:disco', function() {
+      done();
     });
 
     igelkott.connect();
@@ -55,7 +92,6 @@ describe('Talk', function() {
     s.write(":dsmith7!~dsmith@unaffiliated/dsmith PRIVMSG ##botbotbot :!movingon\r\n");
     s.write(":dsmith8!~dsmith@unaffiliated/dsmith PRIVMSG ##botbotbot :!movingon\r\n");
     s.write(":dsmith9!~dsmith@unaffiliated/dsmith PRIVMSG ##botbotbot :!movingon\r\n");
-
   });
 
 });
