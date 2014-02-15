@@ -46,6 +46,8 @@ Hue.prototype.movingon = function movingon(message) {
     // To be added later
     //http.get({ hostname: 'localhost', port: 8080, path: '/?hue=101010' }); // @TODO: Might want to handle a response
 
+    this.igelkott.emit('hue:disco');
+
     obj = {
       command: 'PRIVMSG',
       parameters: [message.parameters[0], "Vi kör en moving on"]
@@ -53,6 +55,9 @@ Hue.prototype.movingon = function movingon(message) {
 
     this.igelkott.push(obj);
   }
+
+  this.igelkott.emit('hue:movingon');
+};
 };
 
 exports.Plugin = Hue;
