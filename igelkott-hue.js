@@ -46,6 +46,7 @@ Hue.prototype.movingon = function movingon(message) {
     // To be added later
     //http.get({ hostname: 'localhost', port: 8080, path: '/?hue=101010' }); // @TODO: Might want to handle a response
 
+    this.disco(); // Not sure how to test this right now. Could mock http request but not right now
     this.igelkott.emit('hue:disco');
 
     obj = {
@@ -58,6 +59,24 @@ Hue.prototype.movingon = function movingon(message) {
 
   this.igelkott.emit('hue:movingon');
 };
+
+/*
+ * If we want to do disco lights
+ */
+ Hue.prototype.disco = function disco() {
+  if(this.timer === undefined) {
+    this.counter = 10;
+    this.timer = setInterval(function() {
+      // Lets do some disco.
+      this.counter--;
+      if (this.counter < 0)
+      {
+        clearInterval(this.timer);
+        delete this.timer; // Need this to be able to to === undefined above
+      }
+    }.bind(this), 100);
+  }
 };
+
 
 exports.Plugin = Hue;
