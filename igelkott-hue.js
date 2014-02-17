@@ -5,7 +5,7 @@ var Hue = function Hue() {
 
   this.name = 'hue';
   this.help = {
-    "default": "",
+    "default": "Use <trigger>movingon to help make Tommies lamp disco.",
   };
 
   this.queue = [];
