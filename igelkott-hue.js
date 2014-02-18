@@ -10,11 +10,14 @@ var Hue = function Hue() {
 
   this.queue = [];
 
-  var interval = this.config.interval || 60000;
+  this.interval = this.config.interval || 60000;
+  this.limit = this.config.limit || 4;
+
 
   setInterval(function(){
+    this.igelkott.log(queue);
     this.queue.pop();
-  }.bind(this), interval);
+  }.bind(this), this.interval);
 };
 
 Hue.prototype.movingon = function movingon(message) {
@@ -41,7 +44,10 @@ Hue.prototype.movingon = function movingon(message) {
     this.igelkott.push(obj);
   }
 
-  if (this.queue.length > 9)
+  this.igelkott.log(queue);
+
+
+  if (this.queue.length > this.limit)
   {
     // To be added later
     //http.get({ hostname: 'localhost', port: 8080, path: '/?hue=101010' }); // @TODO: Might want to handle a response
