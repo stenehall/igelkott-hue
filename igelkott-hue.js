@@ -9,14 +9,11 @@ var Hue = function Hue() {
   };
 
   this.queue = [];
-
   this.interval = this.config.interval || 60000;
-  this.limit = this.config.limit || 4;
-
+  this.limit = this.config.limit || 10;
 
   setInterval(function(){
-    this.igelkott.log(queue);
-    this.queue.pop();
+    this.queue.shift();
   }.bind(this), this.interval);
 };
 
@@ -27,44 +24,34 @@ Hue.prototype.movingon = function movingon(message) {
   if (this.queue.indexOf(message.prefix.nick) === -1)
   {
     this.queue.push(message.prefix.nick);
-    obj = {
-      command: 'PRIVMSG',
-      parameters: [message.parameters[0], message.prefix.nick+": Yes! Det tycker jag också."]
-    };
 
-    this.igelkott.push(obj);
+    if (this.queue.length >= this.limit)
+    {
+      this.igelkott.log("Hue - Light it up for a minute");
+      this.doCall(200);
+      clearTimeout(this.timer);
+      this.timer = setTimeout(function() {
+        this.igelkott.log("Hue - Down again");
+        this.doCall(0);
+      }.bind(this), 60000);
+
+      //this.disco();
+      this.igelkott.emit('hue:disco');
+    }
+    else
+    {
+      this.igelkott.log("Hue - Light it up for a 2 seconds");
+      this.doCall(100);
+      this.timer = setTimeout(function() {
+        this.igelkott.log("Hue - Down again");
+        this.doCall(0);
+      }.bind(this), 2000);
+    }
+    this.igelkott.log("Hue - Reqired lvl: "+this.limit+" Current lvl: "+this.queue.length);
   }
-  else
-  {
-    obj = {
-      command: 'PRIVMSG',
-      parameters: [message.parameters[0], message.prefix.nick+": Du har redan hojtat högt."]
-    };
-
-    this.igelkott.push(obj);
-  }
-
-  this.igelkott.log(queue);
-
-
-  if (this.queue.length > this.limit)
-  {
-    // To be added later
-    //http.get({ hostname: 'localhost', port: 8080, path: '/?hue=101010' }); // @TODO: Might want to handle a response
-
-    this.disco(); // Not sure how to test this right now. Could mock http request but not right now
-    this.igelkott.emit('hue:disco');
-
-    obj = {
-      command: 'PRIVMSG',
-      parameters: [message.parameters[0], "Vi kör en moving on"]
-    };
-
-    this.igelkott.push(obj);
-  }
-
   this.igelkott.emit('hue:movingon');
 };
+
 
 /*
  * If we want to do disco lights
@@ -82,6 +69,19 @@ Hue.prototype.movingon = function movingon(message) {
       }
     }.bind(this), 100);
   }
+};
+
+
+Hue.prototype.doCall = function doCall(bri) {
+
+  http.get({ hostname: this.config.host, port: this.config.port, path: '/tommie.php?bri='+bri}, function(data) {
+    this.igelkott.emit('hue:response', data);
+  }.bind(this)).on('error', function(e) {
+    if (e === "ECONNREFUSED")
+    {
+      this.igelkott.log("Server not up at the moment");
+    }
+  });
 };
 
 
