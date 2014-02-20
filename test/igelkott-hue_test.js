@@ -25,7 +25,7 @@ describe('Hue', function() {
     };
 
     igelkott = new Igelkott(config);
-    igelkott.plugin.load('hue', {interval: 5000, host: 'localhost', port: 5000}, Hue);
+    igelkott.plugin.load('hue', {interval: 5000, percentage: 0.1, host: 'localhost', port: 5000}, Hue);
 
   });
 
