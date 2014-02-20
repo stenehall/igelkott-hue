@@ -10,8 +10,9 @@ var Hue = function Hue() {
 
   this.queue = [];
   this.interval = this.config.interval || 60000;
-  this.limit = this.config.limit || 10;
+  this.percentage = this.config.percentage || 0.1;
 
+  // Remove users one by one by an interval
   setInterval(function(){
     this.queue.shift();
   }.bind(this), this.interval);
@@ -31,10 +32,14 @@ Hue.prototype.movingon = function movingon(message) {
   {
     this.queue.push(message.prefix.nick);
 
-    if (this.queue.length >= this.limit)
+    var limit = Math.round(this.userCount * (this.percentage)) || 1;
+    
+    if (this.queue.length >= limit)
     {
-      this.igelkott.log("Hue - Light it up for a minute");
-      this.doCall(200);
+      var brightness = Math.round((this.queue.length / (limit * 2)) * 200);
+      this.igelkott.log('Hue - Lighting it up to: '+brightness);
+
+      this.doCall(brightness);
       clearTimeout(this.timer);
       this.timer = setTimeout(function() {
         this.igelkott.log("Hue - Down again");
@@ -44,16 +49,7 @@ Hue.prototype.movingon = function movingon(message) {
       //this.disco();
       this.igelkott.emit('hue:disco');
     }
-    else
-    {
-      this.igelkott.log("Hue - Light it up for a 2 seconds");
-      this.doCall(100);
-      this.timer = setTimeout(function() {
-        this.igelkott.log("Hue - Down again");
-        this.doCall(0);
-      }.bind(this), 2000);
-    }
-    this.igelkott.log("Hue - Reqired lvl: "+this.limit+" Current lvl: "+this.queue.length);
+    this.igelkott.log("Hue - Reqired votes: "+limit+" Current lvl: "+this.queue.length);
   }
   this.igelkott.emit('hue:movingon');
 };
