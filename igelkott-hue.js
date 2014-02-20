@@ -1,7 +1,7 @@
 var http = require("http");
 
 var Hue = function Hue() {
-  this.listeners = {'trigger:movingon': this.movingon};
+  this.listeners = {'trigger:movingon': this.movingon, '353': this._353};
 
   this.name = 'hue';
   this.help = {
@@ -16,6 +16,12 @@ var Hue = function Hue() {
     this.queue.shift();
   }.bind(this), this.interval);
 };
+
+Hue.prototype._353 = function _353(message) {
+  var users = message.parameters[3].split(' ');
+  this.userCount = users.length;
+}
+
 
 Hue.prototype.movingon = function movingon(message) {
 
