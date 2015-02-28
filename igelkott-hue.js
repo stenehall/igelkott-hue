@@ -25,17 +25,11 @@ Hue.prototype._353 = function _353(message) {
 
 
 Hue.prototype.movingon = function movingon(message) {
-
-  var obj;
-
-  if (this.queue.indexOf(message.prefix.nick) === -1)
-  {
+  if (this.queue.indexOf(message.prefix.nick) === -1) {
     this.queue.push(message.prefix.nick);
-
     var limit = Math.round(this.userCount * (this.percentage)) || 1;
-    
-    if (this.queue.length >= limit)
-    {
+
+    if (this.queue.length >= limit) {
       var brightness = Math.round((this.queue.length / (limit * 2)) * 200);
       this.igelkott.log('Hue - Lighting it up to: '+brightness);
 
@@ -58,14 +52,13 @@ Hue.prototype.movingon = function movingon(message) {
 /*
  * If we want to do disco lights
  */
- Hue.prototype.disco = function disco() {
+Hue.prototype.disco = function disco() {
   if(this.timer === undefined) {
     this.counter = 10;
     this.timer = setInterval(function() {
       // Lets do some disco.
       this.counter--;
-      if (this.counter < 0)
-      {
+      if (this.counter < 0) {
         clearInterval(this.timer);
         delete this.timer; // Need this to be able to to === undefined above
       }
@@ -75,12 +68,10 @@ Hue.prototype.movingon = function movingon(message) {
 
 
 Hue.prototype.doCall = function doCall(bri) {
-
   http.get({ hostname: this.config.host, port: this.config.port, path: '/tommie.php?bri='+bri}, function(data) {
     this.igelkott.emit('hue:response', data);
   }.bind(this)).on('error', function(e) {
-    if (e === "ECONNREFUSED")
-    {
+    if (e === "ECONNREFUSED") {
       this.igelkott.log("Server not up at the moment");
     }
   });
@@ -88,3 +79,4 @@ Hue.prototype.doCall = function doCall(bri) {
 
 
 exports.Plugin = Hue;
+
